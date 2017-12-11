@@ -18,7 +18,6 @@ public class Main {
 	public static final String wrongcomm = "Opcao inexistente.";
 	
 	//make it constants!!
-	// ha ha new change
 	/*Novo jogo");
 	System.out.println("soldado - Move o soldado");
 	System.out.println("recruta - Recruta um soldado num castelo");
@@ -46,12 +45,15 @@ public class Main {
 				}
 				else{
 					switch (comm){
+					//by Klara
 					case help: processHelp2(fk);break;
 					case newgame: processNewGame(in, fk);break;
 					case map:  in.nextLine(); processMap(fk); break;
-					case castles: in.nextLine(); processCastles(fk); break;
+					case castles: in.nextLine(); processCastles(fk); break; //class castel
 					case troops: in.nextLine(); processTroops(fk); break;
-					case kingdoms: in.nextLine(); processKingdoms(fk); break;
+					
+					//commands by Luis
+					case kingdoms: in.nextLine(); processKingdoms(fk); break; //class kingdom
 					case recruit: processRecruit(in, fk); break;
 					case soldier: processSoldier(in, fk); break;
 					default: System.out.print(wrongcomm);
@@ -65,6 +67,8 @@ public class Main {
 
 	private static void processSoldier(Scanner in, FiveKingdoms fk) {
 		// TODO Auto-generated method stub
+		
+		//while (in.next()) 
 		
 	}
 
