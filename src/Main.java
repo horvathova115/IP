@@ -26,6 +26,20 @@ public class Main {
 	public static final String message_help = "Mostra a ajuda";
 	public static final String message_leaving = "Termina a execucao do programa";
 	
+
+  //constants for preconditions
+	private static final int MAX_KINGDOMS = 8;
+	private static final int MIN_KINGDOMS = 2;
+	private static final int MAP_MIN_DIM = 10;
+	private static final int MIN_NUM_OF_CASTLES = numberOfKingdoms;
+	private static final int MAX_NUM_OF_CASTLES = mapPosX*mapPosY;
+	
+	
+	private int numberOfKingdoms;
+	private int mapPosX;
+	private int mapPosY;
+  
+  
 	public static void main(String [] args) {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Bem vindo");
@@ -40,8 +54,7 @@ public class Main {
 					case newgame: in.nextLine();processNewGame(in, fk);break;
 					default: System.out.print(wrongcomm);
 					}
-				}
-				else{
+				}else{
 					switch (comm){
 					//by Klara
 					case help: processHelp2(fk);break;
@@ -96,6 +109,11 @@ public class Main {
 
 	private static void processNewGame(Scanner in, FiveKingdoms fk) {
 		// TODO Auto-generated method stub
+		mapPosX=in.nextInt();
+		mapPosY=in.nextInt();
+		numOfKingdoms=in.nextInt();
+		numOfCastels=in.nextInt();
+		
 	}
 
 	private static void processHelp1() { 
