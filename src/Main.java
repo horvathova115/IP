@@ -16,18 +16,16 @@ public class Main {
 	//Constantes que definem as mensagens
 	public static final String goodbye = "Obrigado por jogar. Ate a proxima.";
 	public static final String wrongcomm = "Opcao inexistente.";
+	public static final String message_newgame = "Novo jogo";
+	public static final String message_soldier = "Move o soldado";
+	public static final String message_recruit = "Recruta um soldado num castelo";
+	public static final String message_map = "Lista todos os castelos do mapa, incluindo os abandonados, pela ordem de criacao no jogo\n e todos os reinos ainda em jogo, pela ordem de jogada";
+	public static final String message_castles = "Lista os castelos do jogador activo, pela ordem pela qual foram conquistados";
+	public static final String message_troops = "Lista os soldados vivos do jogador activo, pela ordem de recrutamento";
+	public static final String message_kingdoms = "Lista os varios reinos ainda em jogo, ordenados por nome do reino";
+	public static final String message_help = "Mostra a ajuda";
+	public static final String message_leaving = "Termina a execucao do programa";
 	
-	//make it constants!!
-	/*Novo jogo");
-	System.out.println("soldado - Move o soldado");
-	System.out.println("recruta - Recruta um soldado num castelo");
-	System.out.println("mapa - Lista todos os castelos do mapa, incluindo os abandonados, pela ordem de criacao no jogo\n e todos os reinos ainda em jogo, pela ordem de jogada");
-	System.out.println("castelos - Lista os castelos do jogador activo, pela ordem pela qual foram conquistados");
-	System.out.println("exercito - Lista os soldados vivos do jogador activo, pela ordem de recrutamento");
-	System.out.println("reinos - Lista os varios reinos ainda em jogo, ordenados por nome do reino");
-	System.out.println("ajuda - Mostra a ajuda");
-	System.out.println("sai - Termina a execucao do programa"
-	*/
 	public static void main(String [] args) {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Bem vindo");
@@ -100,24 +98,25 @@ public class Main {
 		// TODO Auto-generated method stub
 	}
 
-	//theese methods wll be rewrited as constants
-	private static void processHelp1(FiveKingdoms fk) { 
-			System.out.println("novo - Novo jogo");
-			System.out.println("ajuda - Mostra a ajuda");
-			System.out.println("sai - Termina a execucao do programa");
-		}
-	//theese methods wll be rewrited as constants
-	private static void processHelp2(FiveKingdoms fk) {
-			System.out.println("novo - Novo jogo");
-			System.out.println("soldado - Move o soldado");
-			System.out.println("recruta - Recruta um soldado num castelo");
-			System.out.println("mapa - Lista todos os castelos do mapa, incluindo os abandonados, pela ordem de criacao no jogo\n e todos os reinos ainda em jogo, pela ordem de jogada");
-			System.out.println("castelos - Lista os castelos do jogador activo, pela ordem pela qual foram conquistados");
-			System.out.println("exercito - Lista os soldados vivos do jogador activo, pela ordem de recrutamento");
-			System.out.println("reinos - Lista os varios reinos ainda em jogo, ordenados por nome do reino");
-			System.out.println("ajuda - Mostra a ajuda");
-			System.out.println("sai - Termina a execucao do programa");
-		}
+	private static void processHelp1() { 
+			System.out.println(newgame+" - "+message_newgame);
+			System.out.println(help+" - "+ message_help);
+			System.out.println(leaving+" - "+ message_leaving);
+	}
+	
+	
+	private static void processHelp2() {
+			System.out.println(newgame+" - "+message_newgame);
+			System.out.println(soldier+" - "+message_soldier);
+			System.out.println(recruit+" - "+message_recruit);
+			System.out.println(map+" - "+message_map);
+			System.out.println(castles+" - "+message_castles);
+			System.out.println(troops+" - "+message_troops);
+			System.out.println(kingdoms+" - "+message_kingdoms);
+			System.out.println(help+" - "+ message_help);
+			System.out.println(leaving+" - "+ message_leaving);
+	}
+
 
 	private static String getCommand(Scanner in, FiveKingdoms fk) {
 		System.out.print(">"+fk.teamPlaying);
