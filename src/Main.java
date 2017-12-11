@@ -137,7 +137,7 @@ public class Main {
 
 
 	private static String getCommand(Scanner in, FiveKingdoms fk) {
-		System.out.print(">"+fk.teamPlaying);
+		System.out.print(fk.teamPlaying+">");
 		String option = in.next().toLowerCase();
 		return option;
 	}
