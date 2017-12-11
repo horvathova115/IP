@@ -18,6 +18,7 @@ public class Main {
 	public static final String wrongcomm = "Opcao inexistente.";
 	
 	//make it constants!!
+	// ha ha new change
 	/*Novo jogo");
 	System.out.println("soldado - Move o soldado");
 	System.out.println("recruta - Recruta um soldado num castelo");
