@@ -89,7 +89,11 @@ public class Main {
 	}
 
 	private static void processKingdoms(FiveKingdoms fk) {
-		// TODO Auto-generated method stub
+		System.out.println(fk.activeKingdoms()+"reinos");
+		fk.initializeIteratorKingdoms();
+		while (fk.hasNextKingdom()) {
+			// System.out.println(fk.nextName());
+		}
 		
 	}
 
