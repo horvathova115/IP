@@ -26,16 +26,30 @@ public class Main {
 	public static final String message_help = "Mostra a ajuda";
 	public static final String message_leaving = "Termina a execucao do programa";
 	
-
+	public static final String message_wrongMap = "Mapa pequeno demais para o jogo.";
+	public static final String message_wrongKingdoms="Numero de reinos invalido.";
+	public static final String message_wrongCastles="Numero de castelos invalido.";
+	public static final String message_wrongCastelPos="Castelo em posicao invalida.";
+	public static final String message_wrongCastelTreasure="Castelo com riqueza invalida.";
+	public static final String message_wrongCastelName="Os castelos nao podem ter nomes duplicados.";
+	public static final String message_wrongCastelNumber="Numero insuficiente de castelos criados.";
+	public static final String message_wrongKingdomName = "Os reinos nao podem ter nomes duplicados.";
+	public static final String message_occupiedCastle="Castelo ja ocupado.";
+	public static final String message_nonexistentCastel="Castelo nao existe.";
+	public static final String message_wrongKingdomNumber="Numero insuficiente de reinos criados.";
+	public static final String message_unsuccesfulGame="Erro fatal, jogo nao inicializado.";
+	public static final String message_succesfulNewGame="Jogo iniciado, comeca o reino ";
+	
   //constants for preconditions
 	private static final int MAX_KINGDOMS = 8;
 	private static final int MIN_KINGDOMS = 2;
 	private static final int MAP_MIN_DIM = 10;
-	private static final int MIN_NUM_OF_CASTLES = numberOfKingdoms;
+	private static final int MIN_NUM_OF_CASTLES = numOfKingdoms;
 	private static final int MAX_NUM_OF_CASTLES = mapPosX*mapPosY;
 	
 	
-	private int numberOfKingdoms;
+	private int numOfKingdoms;
+	private int numOfCastels;
 	private int mapPosX;
 	private int mapPosY;
   
@@ -43,11 +57,7 @@ public class Main {
 	public static void main(String [] args) {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Bem vindo");
-		/*as per what I said to you on facebook, the creation of the object fk should not be placed here, it should
-		be created by time the game starts, and that way we can add arguments such as the number of Kingdoms,
-		the number of Castles, the xMap and the yMap
-		*/
-		FiveKingdoms fk = new FiveKingdoms(/* xMap, yMap, nKingdoms, nCastles */);
+		FiveKingdoms fk; 
 		String comm = "";
 		do {
 			comm = getCommand(in, fk);
@@ -121,7 +131,32 @@ public class Main {
 		mapPosY=in.nextInt();
 		numOfKingdoms=in.nextInt();
 		numOfCastels=in.nextInt();
-		
+		if(!validate(mapPosX,mapPosY,numOfKingdoms, numOfCastels)){
+		}
+		else{
+			System.out.println(message_enterCastles); //need a constant message
+			//new scanner for the new data about castles
+			//for cycle in the numbers of catels
+			// validate position in the map
+			//validate positive treasure number
+			//validate if names are not duplicated
+			//keep kounting how much were really created and validate if the number is suficient
+			//then kingdoms with a new scanner again
+		}
+		fk = new FiveKingdoms(mapPosX, mapPosY, numOfKingdoms, numOfCastels);
+	}
+	
+	private static boolean validate(int x,int y, int nok, int noc){
+		if (x>=MAP_MIN_DIM && y>=MAP_MIN_DIM){
+			System.out.println(message_wrongMap);
+		}else if( MIN_KINGDOMS<=nok<=MAX_KINGDOMS){
+			System.out.println(message_wrongKingdoms);
+		}else if(MIN_NUM_OF_CASTLES<=noc<=MAX_NUM_OF_CASTLES){
+			System.out.println(message_wrongCastles);
+		}else {System.out.println(message_succesfulNewGame);
+			return true;}
+		System.out.println(message_unsuccesfulGame);
+		return false;
 	}
 
 	private static void processHelp1() { 
