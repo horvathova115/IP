@@ -1,16 +1,26 @@
 public class Fortress {
 	 
-	String name;
-	String owner;
-	int treasure;
-	boolean occupied;
+	private String name;
+	private String owner;
+	private int treasure;
+	private boolean occupied;
+	private Position x;
+	private Position y;
+	
 
-	public Fortress(String name, String owner, int treasure, boolean occupied) {
+	public Fortress(Position x, Position y, int treasure, String name, boolean occupied,) {
 		this.name = name;
-		this.owner = owner;
 		this.treasure = treasure;
 		this.occupied = occupied;
+		this.x=x;
+		this.y=y;
 	}
+	
+	public Fortress(String owner){
+		this.owner = owner;
+		this.occupied=true;
+	}
+
 	
 	public String getName() {
 		return name;
@@ -22,5 +32,12 @@ public class Fortress {
 	
 	public boolean isOccupied() {
 		return occupied;
+	}
+	
+	public Position getX(){
+		return x;
+	}
+	public Position getY(){
+		return y;
 	}
 }
