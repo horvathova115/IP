@@ -43,7 +43,11 @@ public class Main {
 	public static void main(String [] args) {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Bem vindo");
-		FiveKingdoms fk = new FiveKingdoms();
+		/*as per what I said to you on facebook, the creation of the object fk should not be placed here, it should
+		be created by time the game starts, and that way we can add arguments such as the number of Kingdoms,
+		the number of Castles, the xMap and the yMap
+		*/
+		FiveKingdoms fk = new FiveKingdoms(/* xMap, yMap, nKingdoms, nCastles */);
 		String comm = "";
 		do {
 			comm = getCommand(in, fk);
