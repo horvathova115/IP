@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Main {
 
-	//Constantes que definem os comandos
+	//Constants which define commands
 	public static final String leaving = "sai";
 	public static final String help = "ajuda";
 	public static final String newgame = "novo";
@@ -13,7 +13,7 @@ public class Main {
 	public static final String recruit = "recruta";
 	public static final String soldier = "soldado";
 	
-	//Constantes que definem as mensagens
+	//Constants which define messages for the user
 	public static final String goodbye = "Obrigado por jogar. Ate a proxima.";
 	public static final String wrongcomm = "Opcao inexistente.";
 	public static final String message_newgame = "Novo jogo";
