@@ -1,11 +1,11 @@
 public class FiveKingdoms {
 	
-	private static final int MAX_KINGDOMS = 8;
 	public static final int PRICE_CAV = 4;
 	public static final int PRICE_LAN_ESP = 2;
+	private static final String KNIGHT = "cavaleiro";
+	private static final String SWORDSMAN = "espadachim";
+	private static final String LANCER = "lanceiro";
 	
-	//private int maplenghtx;
-	//private int maglenghty;
 	private Position map;
 	private Castles[] castles;
 	private Kingdom[] kingdoms;
@@ -20,11 +20,10 @@ public class FiveKingdoms {
 	private int currentArmy;
 	private int counterKingdoms;
 	private int counterCastles;
+	private int counterArmies;
 	
 
 	public FiveKingdoms(int mapx, int mapy, int numOfKingdoms, int numOfCastles) {
-		//this.maplenghtx = mapx;
-		//this.maglenghty = mapy;
 		map = new Position(mapx,mapy);
 		kingdoms = new Kingdom[numOfKingdoms];
 		castles = new Castles[numOfCastles];
@@ -33,6 +32,7 @@ public class FiveKingdoms {
 		counter = 0;
 		counterCastles=0;
 		counterKingdoms=0;
+		counterArmies=0;
 		teamPlaying = ""; //still don't know if we need this or not
 		currentKingdom = -1;
 		currentCastle = -1;
@@ -48,25 +48,30 @@ public class FiveKingdoms {
 	public void initializeIteratorCastles() {
 		currentCastle = 0;
 	}
+	public void initializeIteratorArmies() {
+		currentArmy = 0;
+	}
 	
 	public boolean hasNextKingdom(){
 		return ((currentKingdom >= 0 ) && (currentKingdom < counter));
 	}
 	
-	public String nextName(){
-		return kingdoms[currentKingdom++].name;
+	public boolean hasNextCastle() {
+		return ((currentCastle<counterCastles) && (currentCastle>=0));
 	}
 	
-	public int activeKingdoms() {
-		int k = 0;
-		for (int i = 0; i == numOfKingdoms; i++) {
-			if (kingdoms[i].active == true) {
-				k++;
-			}
-		}
-		return k;
+	public boolean hasNextArmy() {
+		return ((currentArmy<counterArmies) && (currentArmy>=0));
 	}
-	
+
+	public Kingdom nextKingdom() {
+		return kingdoms[currentKingdom++];
+	}
+
+	public Castles nextCastle() {
+		return castles[currentCastle++];
+	}
+
 	public int activeKingdoms() {
 		int k = 0;
 		for (int i = 0; i == numOfKingdoms; i++) {
@@ -80,8 +85,8 @@ public class FiveKingdoms {
 	// @pre: canCastleBuy(castle)
 	public void atributeSoldier(String type, String castle) {
 		for (int i = 0; i == numOfCastles; i++) {
-			if (fortresses[i].getName().equals(castle)) {
-				fortresses[i].depositGold(getPrice(type));
+			if (castles[i].getName().equals(castle)) {
+				castles[i].depositGold(getPrice(type));
 			}
 		}
 		armies[currentArmy].castle = castle;
@@ -90,13 +95,10 @@ public class FiveKingdoms {
 	
 	public int getPrice(String type) {
 		if (type.equals(KNIGHT)) {
-			return 4;
+			return PRICE_CAV;
 		}
-		else if (type.equals(LANCER)) {
-			return 2;
-		}
-		else if (type.equals(SWORDSMAN)) {
-			return 2;
+		else if (type.equals(LANCER) || type.equals(SWORDSMAN)) {
+			return PRICE_LAN_ESP;
 		}
 		else {
 			return 0;
@@ -122,8 +124,8 @@ public class FiveKingdoms {
 	public int kingdomsnTreasure(String name) {
 		int k = 0;
 		for (int i = 0; i == numOfKingdoms; i++) {
-			if (fortresses[i].getOwner().equals(name)) {
-				k+= fortresses[i].getTreasure();
+			if (castles[i].getOwner().equals(name)) {
+				k+= castles[i].getTreasure();
 			}
 		}
 		return k;
@@ -132,7 +134,7 @@ public class FiveKingdoms {
 	public int kingdomsnCastles(String name) {
 		int k = 0;
 		for (int i = 0; i == numOfKingdoms; i++) {
-			if (fortresses[i].getOwner().equals(name)) {
+			if (castles[i].getOwner().equals(name)) {
 				k++;
 			}
 		}
@@ -149,10 +151,11 @@ public class FiveKingdoms {
 		return k;
 	}
 	
+
 	public boolean validateCastleOwner(String name, String castle) {
 		boolean belongs = false;
 		for (int i = 0; i == numOfCastles; i++) {
-			if (fortresses[i].getOwner().equals(name)) {
+			if (castles[i].getOwner().equals(name)) {
 				belongs = true;
 				return belongs;
 			}
@@ -166,7 +169,7 @@ public class FiveKingdoms {
 	public boolean canCastleBuy(String name) {
 		boolean buys = false;
 		for (int i = 0; i == numOfCastles; i++) {
-			if (fortresses[i].getName().equals(name)) {
+			if (castles[i].getName().equals(name)) {
 				buys = true;
 				return buys;
 			}
@@ -191,22 +194,18 @@ public class FiveKingdoms {
 		return occupied;
 	}
 
-	//what with theese methods in Five Kingdoms, which I cant reach while not initializing FiveKigdoms constructor...
 	public void addCastle(Castles c) {
-		// TODO Auto-generated method stub
 		castles[counter]=c;
 		counter++;
 	}
 
 	public void removeAllCastles() {
-		// TODO Auto-generated method stub
 		castles= new Castles[numOfCastles];
 	}
 
 	public boolean existCastlePos(int x, int y) {
-		// TODO Auto-generated method stub
 		for(int i=0;i<counterCastles;i++){
-			if(castles[i].pos().getX()==x && castles[i].pos().getY()==y){
+			if(castles[i].getPos().getX()==x && castles[i].getPos().getY()==y){
 				return true;
 			}
 		}
@@ -215,7 +214,6 @@ public class FiveKingdoms {
 	}
 
 	public boolean existCastleName(String name) {
-		// TODO Auto-generated method stub
 		boolean exist = false;
 		for(int i=0;i<counterCastles;i++){
 			if(castles[i].getName().equals(name)){
@@ -226,37 +224,18 @@ public class FiveKingdoms {
 	}
 
 	public Position getMapPosition() {
-		// TODO Auto-generated method stub
 		return map;
 	}
 
-	public boolean hasNextCastle() {
-		// TODO Auto-generated method stub
-		return ((currentCastle<counterCastles) && (currentCastle>=0));
-	}
-
-	public Kingdom nextKingdom() {
-		// TODO Auto-generated method stub
-		return kingdoms[currentKingdom++];
-	}
-
-	public Castles nextCastle() {
-		// TODO Auto-generated method stub
-		return castles[currentCastle++];
-	}
-
 	public void addKingdom(Kingdom k) {
-		// TODO Auto-generated method stub
 		kingdoms[counterKingdoms]=k;
 	}
 
 	public void removeAllKingdoms() {
-		// TODO Auto-generated method stub
 		kingdoms = new Kingdom[numOfKingdoms];
 	}
 
 	public boolean existKingdom(String kingdom) {
-		// TODO Auto-generated method stub
 		boolean exist=false;
 		for(int i=0;i<numOfKingdoms;i++){
 			if(kingdoms[i].getName().equals(kingdom)){
@@ -267,7 +246,6 @@ public class FiveKingdoms {
 	}
 
 	public boolean castleFree(String castle) {
-		// TODO Auto-generated method stub
 		boolean occupied=false;
 		for(int i=0;i<numOfCastles;i++){
 			Castles c= castles[i];
@@ -286,4 +264,46 @@ public class FiveKingdoms {
 	public int getNumberOfKingdoms(){
 		return numOfKingdoms;
 	}
+
+	public Object checkType(int soldierx, int soldiery) {
+		return null;
+	}
+
+	public Castles getCastle(String castle) {
+		Castles c = null;
+		for(int i=0;i<counterCastles;i++){
+			if(castles[i].getName().equals(castle)){
+				c=castles[i];
+			}
+		}
+		return c;
+	}
+
+	public String castlesOfKingdom(String teamPlaying) {
+		// TODO Auto-generated method stub
+		String res="";
+		Kingdom k = findKingdom(teamPlaying);
+		k.initializeIterator();
+		while(k.hasNext()){
+			Castles c = k.next();
+			res+=c.getName() + " ";
+			res+=c.getTreasure()+ " ";
+			res+="("+ c.getPos().getX()+", "+c.getPos().getY()+")";
+			res+="\n";
+		}
+		return res;
+	}
+
+	private Kingdom findKingdom(String teamPlaying) {
+		// TODO Auto-generated method stub
+		Kingdom k=null;
+		for(int i=0;i<counterKingdoms;i++){
+			if(kingdoms[i].getName().equals(teamPlaying)){
+				k=kingdoms[i];
+			}
+		}
+		return k;
+	}
+
+	
 }
