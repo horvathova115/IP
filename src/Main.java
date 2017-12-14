@@ -1,3 +1,4 @@
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class Main {
@@ -25,6 +26,7 @@ public class Main {
 	public static final String message_kingdoms = "Lista os varios reinos ainda em jogo, ordenados por nome do reino";
 	public static final String message_help = "Mostra a ajuda";
 	public static final String message_leaving = "Termina a execucao do programa";
+	private static final String inactivecomm = "Comando inactivo.";
 	
 	public static final String message_wrongMap = "Mapa pequeno demais para o jogo.";
 	public static final String message_wrongKingdoms="Numero de reinos invalido.";
@@ -39,8 +41,17 @@ public class Main {
 	public static final String message_wrongKingdomNumber="Numero insuficiente de reinos criados.";
 	public static final String message_unsuccesfulGame="Erro fatal, jogo nao inicializado.";
 	public static final String message_succesfulNewGame="Jogo iniciado, comeca o reino ";
+	private static final String message_enterCastles = "castelos:";
+	private static final String message_enterKindoms = "reinos:";
 	
-  //constants for preconditions
+
+	private static int numOfKingdoms;
+	private static int numOfCastels;
+	private static int mapPosX;
+	private static int mapPosY;
+	public static FiveKingdoms fk;
+  
+	//constants for preconditions
 	private static final int MAX_KINGDOMS = 8;
 	private static final int MIN_KINGDOMS = 2;
 	private static final int MAP_MIN_DIM = 10;
@@ -48,30 +59,27 @@ public class Main {
 	private static final int MAX_NUM_OF_CASTLES = mapPosX*mapPosY;
 	
 	
-	private int numOfKingdoms;
-	private int numOfCastels;
-	private int mapPosX;
-	private int mapPosY;
-  
+	
+	
   
 	public static void main(String [] args) {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Bem vindo");
-		FiveKingdoms fk; 
+		 
 		String comm = "";
 		do {
 			comm = getCommand(in, fk);
 			if (!comm.equals(leaving)) {
 				if(!fk.gameOn){
 					switch (comm){
-					case help: processHelp1(fk);break;
+					case help: processHelp1();break;
 					case newgame: in.nextLine();processNewGame(in, fk);break;
 					default: System.out.print(wrongcomm);
 					}
 				}else{
 					switch (comm){
 					//by Klara
-					case help: processHelp2(fk);break;
+					case help: processHelp2();break;
 					case newgame: processNewGame(in, fk);break;
 					case map:  in.nextLine(); processMap(fk); break;
 					case castles: in.nextLine(); processCastles(fk); break; //class castel
@@ -117,13 +125,29 @@ public class Main {
 
 	private static void processCastles(FiveKingdoms fk) {
 		// TODO Auto-generated method stub
+		//write out all castles that belong to kingdom which is on turn with parameters name, treasure, position(x,y)
 		
 	}
 
 	private static void processMap(FiveKingdoms fk) {
 		// TODO Auto-generated method stub
-		
+		if(!fk.gameOn){
+			System.out.println(inactivecomm);
+		}
+		System.out.println(fk.getMapPosition().getX() + fk.getMapPosition().getY());
+		System.out.println(numOfCastels + message_enterCastles);
+		fk.initializeIteratorCastles();
+		while(fk.hasNextCastle()){
+			Castles c=fk.nextCastle();
+			System.out.println(c.getName()+"("+c.getOwner()+")");
+		}
+		fk.initializeIteratorKingdoms();
+		while(fk.hasNextKingdom()){
+			Kingdom k = fk.nextKingdom();
+			System.out.print(k.getName()+"; "); //this ";" cant be there just like this, but it has time :D
+		}
 	}
+
 
 	private static void processNewGame(Scanner in, FiveKingdoms fk) {
 		// TODO Auto-generated method stub
@@ -131,33 +155,109 @@ public class Main {
 		mapPosY=in.nextInt();
 		numOfKingdoms=in.nextInt();
 		numOfCastels=in.nextInt();
+		
 		if(!validate(mapPosX,mapPosY,numOfKingdoms, numOfCastels)){
+			System.out.println(message_unsuccesfulGame);
+		}else{fk = new FiveKingdoms(mapPosX, mapPosY, numOfKingdoms, numOfCastels);}
+		if (!processCastles(in)){
+			System.out.println(message_unsuccesfulGame);
+		}else if(!processKingdoms(in)){
+			System.out.println(message_unsuccesfulGame);
+		}else{
+			System.out.println(message_succesfulNewGame);
 		}
-		else{
-			System.out.println(message_enterCastles); //need a constant message
-			//new scanner for the new data about castles
-			//for cycle in the numbers of catels
-			// validate position in the map
-			//validate positive treasure number
-			//validate if names are not duplicated
-			//keep kounting how much were really created and validate if the number is suficient
-			//then kingdoms with a new scanner again
-		}
-		fk = new FiveKingdoms(mapPosX, mapPosY, numOfKingdoms, numOfCastels);
 	}
 	
+	private static boolean processKingdoms(Scanner in) {
+		// TODO Auto-generated method stub
+		boolean process=false;
+		int count = 0;
+		System.out.println(numOfKingdoms + message_enterKindoms);
+		Scanner castScanner = new Scanner (in.nextLine());
+		String kingdom, castle;
+		for (int i=0;i<numOfKingdoms;i++) {
+		    kingdom = castScanner.next();
+		    castle=castScanner.next();
+		    castScanner.nextLine();
+		    if(validateKingdoms(kingdom, castle)){
+		    	Kingdom k = new Kingdom(kingdom); //castle into collection of castles which belong to each kingdom, castle of type Castles
+		    	fk.addKingdom(k); //problem not created yet fk
+		    	count++;	 //counting number of creating castles in real
+		    }if(count<MIN_KINGDOMS){
+		    	System.out.println(message_wrongKingdomNumber);
+		    	fk.removeAllKingdoms();}
+		    else{ process=true;}
+		    }
+		return process;
+	}
+
+	private static boolean validateKingdoms(String kingdom, String castle) {
+		// TODO Auto-generated method stub
+		boolean valid=false;
+		//if names are not duplicated
+		if(fk.existKingdom(kingdom)){
+			System.out.println(message_wrongKingdomName);
+		}
+		else if(fk.castleFree(castle)){
+			System.out.println(message_occupiedCastle);
+		}
+		else if(!fk.existCastleName(castle)){
+			System.out.println(message_nonexistentCastel);
+		}
+		//if castles are not taken
+		return true;
+	}
+
 	private static boolean validate(int x,int y, int nok, int noc){
 		if (x>=MAP_MIN_DIM && y>=MAP_MIN_DIM){
 			System.out.println(message_wrongMap);
-		}else if( MIN_KINGDOMS<=nok<=MAX_KINGDOMS){
+		}else if( MIN_KINGDOMS <= nok &&  nok<= MAX_KINGDOMS){
 			System.out.println(message_wrongKingdoms);
-		}else if(MIN_NUM_OF_CASTLES<=noc<=MAX_NUM_OF_CASTLES){
+		}else if(MIN_NUM_OF_CASTLES<=noc && noc<=MAX_NUM_OF_CASTLES){
 			System.out.println(message_wrongCastles);
 		}else {System.out.println(message_succesfulNewGame);
 			return true;}
-		System.out.println(message_unsuccesfulGame);
+		
 		return false;
 	}
+	
+	private static boolean processCastles(Scanner in){
+		boolean process=false;
+		int count = 0;
+		System.out.println(numOfCastels + message_enterCastles);
+		Scanner castScanner = new Scanner (in.nextLine());
+		int x, y, treasure;
+		String name;
+		for (int i=0;i<numOfCastels;i++) {
+		    x = castScanner.nextInt();
+		    y = castScanner.nextInt();
+		    treasure = castScanner.nextInt();
+		    name = castScanner.next();
+		    castScanner.nextLine();
+		    if(validateCastles(x,y,treasure,name)){
+		    	Castles c = new Castles(x,y,treasure,name, false);
+		    	fk.addCastle(c); //problem not created yet fk
+		    	count++;	 //counting number of creating castles in real
+		    }if(count<MIN_NUM_OF_CASTLES){
+		    	System.out.println(message_wrongCastelNumber);
+		    	fk.removeAllCastles();}
+		    else{ process=true;}
+		    }
+		return process;
+	}
+	
+	private static boolean validateCastles(int x, int y, int treasure, String name ){
+		if(x<1 && y<1 && x>mapPosX && y>mapPosY && fk.existCastlePos(x,y)){ //and also if there no castles on the same position
+	    	System.out.println(message_wrongCastelPos);
+	    }else if(treasure<0){
+	    	System.out.println(message_wrongCastelTreasure);
+	    }else if(fk.existCastleName(name)){
+	    	System.out.println(message_wrongCastelName);
+	    }else{return true;
+	    }
+		return false;
+	}
+	
 
 	private static void processHelp1() { 
 			System.out.println(newgame+" - "+message_newgame);
