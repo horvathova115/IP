@@ -41,8 +41,16 @@ public class Main {
 	public static final String message_wrongKingdomNumber="Numero insuficiente de reinos criados.";
 	public static final String message_unsuccesfulGame="Erro fatal, jogo nao inicializado.";
 	public static final String message_succesfulNewGame="Jogo iniciado, comeca o reino ";
+	public static final String message_wrongSoldierType = "Tipo de soldado inexistente.";
+	public static final String message_CastleInvaded = "Castelo invadido ilegalmente."; 
+	public static final String message_NoMoneyRecruit = "Riqueza insuficiente para recrutamento.";
+	public static final String message_CastleNotFree = "Castelo nao livre.";
 	private static final String message_enterCastles = "castelos:";
 	private static final String message_enterKindoms = "reinos:";
+	private static final String soldiers = "soldados";
+	private static final String KNIGHT = "cavaleiro";
+	private static final String SWORDSMAN = "espadachim";
+	private static final String LANCER = "lanceiro";
 	
 
 	private static int numOfKingdoms;
@@ -99,15 +107,51 @@ public class Main {
 	}
 
 	private static void processSoldier(Scanner in, FiveKingdoms fk) {
-		// TODO Auto-generated method stub
-		
-		//while (in.next()) 
+		int soldierx = in.nextInt();
+		int soldiery = in.nextInt();
+		if (fk.checkType(soldierx, soldiery).equals(KNIGHT)) {
+			String d1 = in.next();
+			String d2 = in.next();
+			String d3 = in.next();
+		}
+		else if (fk.checkType(soldierx, soldiery).equals(SWORDSMAN) || 
+			fk.checkType(soldierx, soldiery).equals(LANCER)) {
+			String d = in.next();
+		}
+		else {
+			//validations
+		}
 		
 	}
-
+	
+	private static boolean validateSoldierType(String type) {
+			if (!type.equals(KNIGHT) || !type.equals(LANCER) || !type.equals(SWORDSMAN)) {
+				return false;
+			}
+			else {
+				return true;
+			}
+	}
+	
 	private static void processRecruit(Scanner in, FiveKingdoms fk) {
-		// TODO Auto-generated method stub
-		
+		String finaltype = in.next().toLowerCase();
+		String finalcastle = in.next().toLowerCase();
+		if (validateSoldierType(finaltype) == false) {
+			System.out.println(message_wrongSoldierType);
+		}
+		else if (fk.validateCastleOwner(fk.teamPlaying, finalcastle) == false) {
+			//verify the definition of teamPlaying
+			System.out.println(message_CastleInvaded);
+		}
+		else if (fk.canCastleBuy(finalcastle) == false) {
+			System.out.println(message_NoMoneyRecruit);
+		}
+		else if (fk.isCastleOccupied(finalcastle)) {
+			System.out.println(message_CastleNotFree);
+		}
+		else {
+			fk.atributeSoldier(finaltype, finalcastle);
+		}
 	}
 
 	private static void processKingdoms(FiveKingdoms fk) {
@@ -119,8 +163,15 @@ public class Main {
 		
 	}
 
+	// @pre: 8 >= fk.activeKingdoms() >= 2
 	private static void processTroops(FiveKingdoms fk) {
-		
+		System.out.println(fk.activeKingdoms()+kingdoms);
+			fk.initializeIteratorKingdoms();
+			while (fk.hasNextKingdom()) {
+				System.out.println(fk.nextName()+","+fk.kingdomsnCastles(fk.nextName())+castles+","+
+			fk.kingdomsnSoldiers(fk.nextName())+soldiers+","+fk.kingdomsnTreasure(fk.nextName())+
+			"de riqueza."); //need to change this to a String constant and the ";"s too
+			}
 	}
 
 	private static void processCastles(FiveKingdoms fk) {
