@@ -182,7 +182,7 @@ public class FiveKingdoms {
 
 	public boolean isCastleOccupied(String castle) {
 		boolean occupied = false;
-		for (int i = 0; i == numOfCastles; i++) {
+		for (int i = 0; i < counterCastles; i++) {
 			if (armies[i].getCastle().equals(castle)) {
 				occupied = true;
 				return occupied;
@@ -196,7 +196,7 @@ public class FiveKingdoms {
 
 	public void addCastle(Castles c) {
 		castles[counter]=c;
-		counter++;
+		counterCastles++;
 	}
 
 	public void removeAllCastles() {
@@ -229,15 +229,16 @@ public class FiveKingdoms {
 
 	public void addKingdom(Kingdom k) {
 		kingdoms[counterKingdoms]=k;
+		counterKingdoms++;
 	}
 
 	public void removeAllKingdoms() {
 		kingdoms = new Kingdom[numOfKingdoms];
 	}
-
+//pre condition , getNumberOfKingdoms>0;
 	public boolean existKingdom(String kingdom) {
 		boolean exist=false;
-		for(int i=0;i<numOfKingdoms;i++){
+		for(int i=0;i<counterKingdoms;i++){
 			if(kingdoms[i].getName().equals(kingdom)){
 				exist=true;
 			}
@@ -247,22 +248,18 @@ public class FiveKingdoms {
 
 	public boolean castleFree(String castle) {
 		boolean occupied=false;
-		for(int i=0;i<numOfCastles;i++){
-			Castles c= castles[i];
-			if(c.getName().equals(castle)){
-				if(c.isOccupied()){
-					occupied=true;
-				}
-			}
-		}
+		Castles c = getCastle(castle);  
+		if(c.isOccupied()){
+			occupied=true;
+		}	
 		return occupied;
 	}
 	
 	public int getNumberofCastles(){
-		return numOfCastles;
+		return counterCastles;
 	}
 	public int getNumberOfKingdoms(){
-		return numOfKingdoms;
+		return counterKingdoms;
 	}
 
 	public Object checkType(int soldierx, int soldiery) {
@@ -271,9 +268,9 @@ public class FiveKingdoms {
 
 	public Castles getCastle(String castle) {
 		Castles c = null;
-		for(int i=0;i<counterCastles;i++){
+		for(int i=0;i<counterCastles-1;i++){
 			if(castles[i].getName().equals(castle)){
-				c=castles[i];
+				return castles[i];
 			}
 		}
 		return c;
