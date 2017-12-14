@@ -1,26 +1,25 @@
-public class Fortress {
+public class Castles {
 	 
 	private String name;
 	private String owner;
 	private int treasure;
 	private boolean occupied;
-	private Position x;
-	private Position y;
+	private Position p;
+	
 	
 
-	public Fortress(Position x, Position y, int treasure, String name, boolean occupied,) {
+	public Castles(int x, int y, int treasure, String name, boolean occupied) {
 		this.name = name;
 		this.treasure = treasure;
 		this.occupied = occupied;
-		this.x=x;
-		this.y=y;
+		p=new Position(x,y);
 	}
 	
-	public Fortress(String owner){
+/*	public Fortress(String owner){//set owner instead of another constructor
 		this.owner = owner;
 		this.occupied=true;
 	}
-
+*/
 	
 	public String getName() {
 		return name;
@@ -34,10 +33,8 @@ public class Fortress {
 		return occupied;
 	}
 	
-	public Position getX(){
-		return x;
+	public Position pos(){
+		return p;
 	}
-	public Position getY(){
-		return y;
-	}
+	
 }
