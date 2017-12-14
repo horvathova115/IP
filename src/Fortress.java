@@ -33,6 +33,10 @@ public class Castles {
 		return occupied;
 	}
 	
+	public void depositGold(int much) {
+		treasure += much;
+	}
+	
 	public Position pos(){
 		return p;
 	}
