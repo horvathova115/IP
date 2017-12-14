@@ -37,8 +37,13 @@ public class Castles {
 		treasure += much;
 	}
 	
-	public Position pos(){
+	public Position getPos(){
 		return p;
+	}
+
+	public int getTreasure() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }
