@@ -66,6 +66,130 @@ public class FiveKingdoms {
 		}
 		return k;
 	}
+	
+	public int activeKingdoms() {
+		int k = 0;
+		for (int i = 0; i == numOfKingdoms; i++) {
+			if (kingdoms[i].active == true) {
+				k++;
+			}
+		}
+		return k;
+	}
+	
+	// @pre: canCastleBuy(castle)
+	public void atributeSoldier(String type, String castle) {
+		for (int i = 0; i == numOfCastles; i++) {
+			if (fortresses[i].getName().equals(castle)) {
+				fortresses[i].depositGold(getPrice(type));
+			}
+		}
+		armies[currentArmy].castle = castle;
+		armies[currentArmy].type = type;
+	}
+	
+	public int getPrice(String type) {
+		if (type.equals(KNIGHT)) {
+			return 4;
+		}
+		else if (type.equals(LANCER)) {
+			return 2;
+		}
+		else if (type.equals(SWORDSMAN)) {
+			return 2;
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	/* method to check if the type of soldier in the pos x y
+	public String checkType(int x, int y) {
+		String k = null;
+		for (int i = 0; !hasNextArmy(); i++) {
+			//the getX
+			if ((armies[i].getX() == x) && (armies[i].getY() == y)) {
+				k = armies[i].type;
+			}
+			else {
+				k = null;
+			}
+		}
+		return k;
+	}
+	*/
+	
+	public int kingdomsnTreasure(String name) {
+		int k = 0;
+		for (int i = 0; i == numOfKingdoms; i++) {
+			if (fortresses[i].getOwner().equals(name)) {
+				k+= fortresses[i].getTreasure();
+			}
+		}
+		return k;
+	}
+	
+	public int kingdomsnCastles(String name) {
+		int k = 0;
+		for (int i = 0; i == numOfKingdoms; i++) {
+			if (fortresses[i].getOwner().equals(name)) {
+				k++;
+			}
+		}
+		return k;
+	}
+	
+	public int kingdomsnSoldiers(String name) {
+		int k = 0;
+		for (int i = 0; !hasNextArmy() ; i++) {
+			if (armies[i].getOwner().equals(name)) {
+				k++;
+			}
+		}
+		return k;
+	}
+	
+	public boolean validateCastleOwner(String name, String castle) {
+		boolean belongs = false;
+		for (int i = 0; i == numOfCastles; i++) {
+			if (fortresses[i].getOwner().equals(name)) {
+				belongs = true;
+				return belongs;
+			}
+			else {
+				belongs = false;
+			}
+		}
+		return belongs;
+	}
+	
+	public boolean canCastleBuy(String name) {
+		boolean buys = false;
+		for (int i = 0; i == numOfCastles; i++) {
+			if (fortresses[i].getName().equals(name)) {
+				buys = true;
+				return buys;
+			}
+			else {
+				buys = false;
+			}
+		}
+		return buys;
+	}
+
+	public boolean isCastleOccupied(String castle) {
+		boolean occupied = false;
+		for (int i = 0; i == numOfCastles; i++) {
+			if (armies[i].getCastle().equals(castle)) {
+				occupied = true;
+				return occupied;
+			}
+			else {
+				occupied = false;
+			}
+		}
+		return occupied;
+	}
 
 	//what with theese methods in Five Kingdoms, which I cant reach while not initializing FiveKigdoms constructor...
 	public void addCastle(Castles c) {
