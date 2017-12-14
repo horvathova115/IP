@@ -58,6 +58,8 @@ public class Main {
 	private static int mapPosX;
 	private static int mapPosY;
 	public static FiveKingdoms fk;
+	private static boolean gameOn=false;
+	//private static String teamPlaying="";
   
 	//constants for preconditions
 	private static final int MAX_KINGDOMS = 8;
@@ -72,31 +74,32 @@ public class Main {
   
 	public static void main(String [] args) {
 		Scanner in = new Scanner(System.in);
-		System.out.println("Bem vindo");
-		 
+		//System.out.println("Bem vindo");
+		processHelp1(); 
 		String comm = "";
 		do {
-			comm = getCommand(in, fk);
+			comm = getCommand(in);
 			if (!comm.equals(leaving)) {
-				if(!fk.gameOn){
+				if(!gameOn){
 					switch (comm){
 					case help: processHelp1();break;
-					case newgame: in.nextLine();processNewGame(in, fk);break;
+					case newgame: processNewGame(in);break;
 					default: System.out.print(wrongcomm);
 					}
 				}else{
+					comm = getCommand2(in);
 					switch (comm){
 					//by Klara
 					case help: processHelp2();break;
-					case newgame: processNewGame(in, fk);break;
-					case map:  in.nextLine(); processMap(fk); break;
-					case castles: in.nextLine(); processCastles(fk); break; //class castel
-					case troops: in.nextLine(); processTroops(fk); break;
+					case newgame: processNewGame(in);break;
+					case map:  in.nextLine(); processMap(); break;
+					case castles: in.nextLine(); processCastles(); break; //class castel
+					case troops: in.nextLine(); processTroops(); break;
 					
 					//commands by Luis
-					case kingdoms: in.nextLine(); processKingdoms(fk); break; //class kingdom
-					case recruit: processRecruit(in, fk); break;
-					case soldier: processSoldier(in, fk); break;
+					case kingdoms: in.nextLine(); processKingdoms(); break; //class kingdom
+					case recruit: processRecruit(in); break;
+					case soldier: processSoldier(in); break;
 					default: System.out.print(wrongcomm);
 					}
 				}
@@ -106,7 +109,7 @@ public class Main {
 		 in.close();
 	}
 
-	private static void processSoldier(Scanner in, FiveKingdoms fk) {
+	private static void processSoldier(Scanner in) {
 		int soldierx = in.nextInt();
 		int soldiery = in.nextInt();
 		if (fk.checkType(soldierx, soldiery).equals(KNIGHT)) {
@@ -133,7 +136,7 @@ public class Main {
 			}
 	}
 	
-	private static void processRecruit(Scanner in, FiveKingdoms fk) {
+	private static void processRecruit(Scanner in) {
 		String finaltype = in.next().toLowerCase();
 		String finalcastle = in.next().toLowerCase();
 		if (validateSoldierType(finaltype) == false) {
@@ -154,7 +157,7 @@ public class Main {
 		}
 	}
 
-	private static void processKingdoms(FiveKingdoms fk) {
+	private static void processKingdoms() {
 		System.out.println(fk.activeKingdoms()+"reinos");
 		fk.initializeIteratorKingdoms();
 		while (fk.hasNextKingdom()) {
@@ -164,7 +167,7 @@ public class Main {
 	}
 
 	// @pre: 8 >= fk.activeKingdoms() >= 2
-	private static void processTroops(FiveKingdoms fk) {
+	private static void processTroops() {
 		System.out.println(fk.activeKingdoms()+kingdoms);
 			fk.initializeIteratorKingdoms();
 			while (fk.hasNextKingdom()) {
@@ -174,11 +177,11 @@ public class Main {
 			}
 	}
 
-	private static void processCastles(FiveKingdoms fk) {
+	private static void processCastles() {
 		System.out.println(fk.castlesOfKingdom(fk.teamPlaying));
 	}
 
-	private static void processMap(FiveKingdoms fk) {
+	private static void processMap() {
 		// TODO Auto-generated method stub
 		if(!fk.gameOn){
 			System.out.println(inactivecomm);
@@ -198,22 +201,26 @@ public class Main {
 	}
 
 
-	private static void processNewGame(Scanner in, FiveKingdoms fk) {
+	private static void processNewGame(Scanner in) {
 		// TODO Auto-generated method stub
 		mapPosX=in.nextInt();
+		//System.out.println(mapPosX);
 		mapPosY=in.nextInt();
 		numOfKingdoms=in.nextInt();
+		System.out.println(numOfKingdoms);
 		numOfCastels=in.nextInt();
 		
 		if(!validate(mapPosX,mapPosY,numOfKingdoms, numOfCastels)){
 			System.out.println(message_unsuccesfulGame);
-		}else{fk = new FiveKingdoms(mapPosX, mapPosY, numOfKingdoms, numOfCastels);}
-		if (!processCastles(in)){
-			System.out.println(message_unsuccesfulGame);
-		}else if(!processKingdoms(in)){
-			System.out.println(message_unsuccesfulGame);
-		}else{
-			System.out.println(message_succesfulNewGame);
+		}else{fk = new FiveKingdoms(mapPosX, mapPosY, numOfKingdoms, numOfCastels);
+			if (!processCastles(in)){
+				System.out.println(message_unsuccesfulGame);
+			}else if(!processKingdoms(in)){
+				System.out.println(message_unsuccesfulGame);
+			}else{
+				System.out.println(message_succesfulNewGame);
+				gameOn=true;
+			}
 		}
 	}
 	
@@ -222,22 +229,24 @@ public class Main {
 		boolean process=false;
 		int count = 0;
 		System.out.println(numOfKingdoms + message_enterKindoms);
-		Scanner castScanner = new Scanner (in.nextLine());
+		Scanner castScanner = new Scanner (System.in);
 		String kingdom, castle;
 		for (int i=0;i<numOfKingdoms;i++) {
 		    kingdom = castScanner.next();
-		    castle=castScanner.next();
-		    castScanner.nextLine();
+		    castle=castScanner.nextLine().trim();
+		    System.out.println(castle);
+		    //castScanner.nextLine();
 		    if(validateKingdoms(kingdom, castle)){
 		    	Kingdom k = new Kingdom(kingdom); //castle into collection of castles which belong to each kingdom, castle of type Castles
 		    	fk.addKingdom(k);
 		    	k.addCastle(fk.getCastle(castle));
+		    	fk.getCastle(castle).setOwner(k);
 		    	count++;	 //counting number of creating castles in real
+		    }
 		    }if(count<MIN_KINGDOMS){
 		    	System.out.println(message_wrongKingdomNumber);
 		    	fk.removeAllKingdoms();}
 		    else{ process=true;}
-		    }
 		return process;
 	}
 
@@ -245,13 +254,16 @@ public class Main {
 		// TODO Auto-generated method stub
 		boolean valid=false;
 		//if names are not duplicated
-		if(fk.existKingdom(kingdom)){
-			System.out.println(message_wrongKingdomName);
+		if(fk.getNumberOfKingdoms()>0){
+			if(fk.existKingdom(kingdom)){
+				System.out.println(message_wrongKingdomName);
+			}
 		}
 		else if(fk.castleFree(castle)){
 			System.out.println(message_occupiedCastle);
 		}
 		else if(!fk.existCastleName(castle)){
+			System.out.println(castle);
 			System.out.println(message_nonexistentCastel);
 		}else{
 			valid=true;
@@ -260,11 +272,12 @@ public class Main {
 	}
 
 	private static boolean validate(int x,int y, int nok, int noc){
-		if (x>=MAP_MIN_DIM && y>=MAP_MIN_DIM){
+		if (x<=MAP_MIN_DIM && y<=MAP_MIN_DIM){
 			System.out.println(message_wrongMap);
-		}else if( MIN_KINGDOMS <= nok &&  nok<= MAX_KINGDOMS){
+		}else if( MIN_KINGDOMS > nok &&  nok> MAX_KINGDOMS){
+			System.out.println(nok +" "+ MIN_KINGDOMS+" "+MAX_KINGDOMS );
 			System.out.println(message_wrongKingdoms);
-		}else if(MIN_NUM_OF_CASTLES<=noc && noc<=MAX_NUM_OF_CASTLES){
+		}else if(MIN_NUM_OF_CASTLES>noc && noc>MAX_NUM_OF_CASTLES){
 			System.out.println(message_wrongCastles);
 		}else {System.out.println(message_succesfulNewGame);
 			return true;}
@@ -275,25 +288,28 @@ public class Main {
 	private static boolean processCastles(Scanner in){
 		boolean process=false;
 		int count = 0;
-		System.out.println(numOfCastels + message_enterCastles);
-		Scanner castScanner = new Scanner (in.nextLine());
 		int x, y, treasure;
 		String name;
+		//System.out.println(numOfCastels + message_enterCastles);
+		Scanner castScanner = new Scanner(System.in);
+		System.out.println(numOfCastels + " "+ message_enterCastles);
+		
 		for (int i=0;i<numOfCastels;i++) {
 		    x = castScanner.nextInt();
 		    y = castScanner.nextInt();
 		    treasure = castScanner.nextInt();
-		    name = castScanner.next();
-		    castScanner.nextLine();
+		    name = castScanner.nextLine().trim();
+		    System.out.println(name);
+		   // castScanner.nextLine();
 		    if(validateCastles(x,y,treasure,name)){
 		    	Castles c = new Castles(x,y,treasure,name, false);
 		    	fk.addCastle(c); //problem not created yet fk
 		    	count++;	 //counting number of creating castles in real
+		    }
 		    }if(count<MIN_NUM_OF_CASTLES){
 		    	System.out.println(message_wrongCastelNumber);
 		    	fk.removeAllCastles();}
 		    else{ process=true;}
-		    }
 		return process;
 	}
 	
@@ -330,7 +346,13 @@ public class Main {
 	}
 
 
-	private static String getCommand(Scanner in, FiveKingdoms fk) {
+	private static String getCommand(Scanner in) {
+		System.out.print(">");
+		String option = in.next().toLowerCase();
+		return option;
+	}
+	
+	private static String getCommand2(Scanner in) {
 		System.out.print(fk.teamPlaying+">");
 		String option = in.next().toLowerCase();
 		return option;
