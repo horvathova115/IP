@@ -168,16 +168,14 @@ public class Main {
 		System.out.println(fk.activeKingdoms()+kingdoms);
 			fk.initializeIteratorKingdoms();
 			while (fk.hasNextKingdom()) {
-				System.out.println(fk.nextName()+","+fk.kingdomsnCastles(fk.nextName())+castles+","+
-			fk.kingdomsnSoldiers(fk.nextName())+soldiers+","+fk.kingdomsnTreasure(fk.nextName())+
+				System.out.println(fk.nextKingdom().getName()+","+fk.kingdomsnCastles(fk.nextKingdom().getName())+castles+","+
+			fk.kingdomsnSoldiers(fk.nextKingdom().getName())+soldiers+","+fk.kingdomsnTreasure(fk.nextKingdom().getName())+
 			"de riqueza."); //need to change this to a String constant and the ";"s too
 			}
 	}
 
 	private static void processCastles(FiveKingdoms fk) {
-		// TODO Auto-generated method stub
-		//write out all castles that belong to kingdom which is on turn with parameters name, treasure, position(x,y)
-		
+		System.out.println(fk.castlesOfKingdom(fk.teamPlaying));
 	}
 
 	private static void processMap(FiveKingdoms fk) {
@@ -232,7 +230,8 @@ public class Main {
 		    castScanner.nextLine();
 		    if(validateKingdoms(kingdom, castle)){
 		    	Kingdom k = new Kingdom(kingdom); //castle into collection of castles which belong to each kingdom, castle of type Castles
-		    	fk.addKingdom(k); //problem not created yet fk
+		    	fk.addKingdom(k);
+		    	k.addCastle(fk.getCastle(castle));
 		    	count++;	 //counting number of creating castles in real
 		    }if(count<MIN_KINGDOMS){
 		    	System.out.println(message_wrongKingdomNumber);
@@ -254,9 +253,10 @@ public class Main {
 		}
 		else if(!fk.existCastleName(castle)){
 			System.out.println(message_nonexistentCastel);
+		}else{
+			valid=true;
 		}
-		//if castles are not taken
-		return true;
+		return valid;
 	}
 
 	private static boolean validate(int x,int y, int nok, int noc){
