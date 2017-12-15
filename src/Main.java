@@ -109,20 +109,129 @@ public class Main {
 		 in.close();
 	}
 
-	private static void processSoldier(Scanner in) {
+	private static void processKnight(Scanner in) {
 		int soldierx = in.nextInt();
 		int soldiery = in.nextInt();
-		if (fk.checkType(soldierx, soldiery).equals(KNIGHT)) {
-			String d1 = in.next();
-			String d2 = in.next();
-			String d3 = in.next();
+		Position sold = new Position(soldierx, soldiery);
+		String d1 = in.next();
+		String d2 = in.next();
+		String d3 = in.next();
+		Position destiny = new Position(0,0);
+		destiny.equals(sold);
+		fk.moving(destiny, d1);
+		fk.moving(destiny, d2);
+		fk.moving(destiny, d3);
+		if (!fk.existsSoldier(sold)) {
+			System.out.println(message_SoldierFail1+fk.teamPlaying+message_SoldierFail2+sold.getX()+message_SoldierFail3+sold.getY()+
+			message_SoldierFail4);
 		}
-		else if (fk.checkType(soldierx, soldiery).equals(SWORDSMAN) || 
-			fk.checkType(soldierx, soldiery).equals(LANCER)) {
-			String d = in.next();
+		else if (!fk.belongsToMap(destiny)) {
+			System.out.println(message_SoldierFail5+KNIGHT+fk.getSoldOwner(sold)+message_SoldierFail6);
+		}
+		else if (fk.existsSoldier(destiny) && fk.getSoldOwner(destiny).equals(fk.getSoldOwner(sold))) {
+			System.out.println(message_SoldierFail5+KNIGHT+fk.getSoldOwner(sold)+message_SoldierFail8);
+		}
+		else if (fk.existCastlePos(destiny.getX(), destiny.getY()) && fk.castleFree(fk.getCastleName(destiny))) {
+			fk.movingSoldier(sold, destiny);
+			//need to fix the newOwner fk.conquerCastle(destiny, newOwner);
+			System.out.println(message_SoldierFail5+KNIGHT+fk.getSoldOwner(sold)+message_SoldierFail9+fk.getCastleName(destiny)+
+			message_SoldierFail10);
+		}
+		else if (fk.existsSoldier(destiny) && !fk.getSoldOwner(destiny).equals(fk.getSoldOwner(sold))) {
+			String first = fk.checkType(sold.getX(), sold.getY());
+			String second = fk.checkType(destiny.getX(), destiny.getY());
+			if (fk.whobattle(first, second).equals(first)) {
+				System.out.println(message_SoldierFail11+fk.getSoldOwner(sold)+message_SoldierFail12+second);
+			}
+			else if (fk.whobattle(first, second).equals(second) && !first.equals(second)) {
+				System.out.println(message_SoldierFail13+second+fk.getSoldOwner(destiny));
+			}
+			else {
+				System.out.println(KNIGHT);
+			}
+		}
+		else if (fk.existCastlePos(destiny.getX(), destiny.getY()) && !fk.castleFree(fk.getCastleName(destiny))) {
+			String first = fk.checkType(sold.getX(), sold.getY());
+			String second = fk.checkType(destiny.getX(), destiny.getY());
+			if (fk.whobattle(first, second).equals(first)) {
+				System.out.println(message_SoldierFail11+fk.getSoldOwner(sold)+message_SoldierFail12+second);
+				fk.movingSoldier(sold, destiny);
+				//need to fix the newOwner fk.conquerCastle(destiny, newOwner);
+				System.out.println(message_SoldierFail5+KNIGHT+fk.getSoldOwner(sold)+message_SoldierFail9+fk.getCastleName(destiny)+
+				message_SoldierFail10);
+			}
+			else if (fk.whobattle(first, second).equals(second) && !first.equals(second)) {
+				System.out.println(message_SoldierFail13+second+fk.getSoldOwner(destiny));
+			}
+			else {
+				System.out.println(KNIGHT);
+			}
+			
 		}
 		else {
-			//validations
+			fk.moving(sold, d1);
+			fk.moving(sold, d2);
+			fk.moving(sold, d3);
+		}
+	}
+	
+	private static void processLancerSwordsman(Scanner in) {
+		int soldierx = in.nextInt();
+		int soldiery = in.nextInt();
+		Position sold = new Position(soldierx, soldiery);
+		String d = in.next();
+		Position destiny = new Position(0,0);
+		destiny.equals(sold);
+		fk.moving(destiny, d);
+		if (!fk.existsSoldier(sold)) {
+			System.out.println(message_SoldierFail1+fk.teamPlaying+message_SoldierFail2+sold.getX()+message_SoldierFail3+sold.getY()+
+			message_SoldierFail4);
+		}
+		else if (!fk.belongsToMap(destiny)) {
+			System.out.println(message_SoldierFail5+fk.checkType(sold.getX(), sold.getY())+fk.getSoldOwner(sold)+message_SoldierFail6);
+		}
+		else if (fk.existsSoldier(destiny) && fk.getSoldOwner(destiny).equals(fk.getSoldOwner(sold))) {
+			System.out.println(message_SoldierFail5+fk.checkType(sold.getX(), sold.getY())+fk.getSoldOwner(sold)+message_SoldierFail8);
+		}
+		else if (fk.existCastlePos(destiny.getX(), destiny.getY()) && fk.castleFree(fk.getCastleName(destiny))) {
+			fk.movingSoldier(sold, destiny);
+			//need to fix the newOwner fk.conquerCastle(destiny, newOwner);
+			System.out.println(message_SoldierFail5+fk.checkType(sold.getX(), sold.getY())+fk.getSoldOwner(sold)+message_SoldierFail9+fk.getCastleName(destiny)+
+			message_SoldierFail10);
+		}
+		else if (fk.existsSoldier(destiny) && !fk.getSoldOwner(destiny).equals(fk.getSoldOwner(sold))) {
+			String first = fk.checkType(sold.getX(), sold.getY());
+			String second = fk.checkType(destiny.getX(), destiny.getY());
+			if (fk.whobattle(first, second).equals(first)) {
+				System.out.println(message_SoldierFail11+fk.getSoldOwner(sold)+message_SoldierFail12+second);
+			}
+			else if (fk.whobattle(first, second).equals(second) && !first.equals(second)) {
+				System.out.println(message_SoldierFail13+second+fk.getSoldOwner(destiny));
+			}
+			else {
+				System.out.println(KNIGHT);
+			}
+		}
+		else if (fk.existCastlePos(destiny.getX(), destiny.getY()) && !fk.castleFree(fk.getCastleName(destiny))) {
+			String first = fk.checkType(sold.getX(), sold.getY());
+			String second = fk.checkType(destiny.getX(), destiny.getY());
+			if (fk.whobattle(first, second).equals(first)) {
+				System.out.println(message_SoldierFail11+fk.getSoldOwner(sold)+message_SoldierFail12+second);
+				fk.movingSoldier(sold, destiny);
+				//need to fix the newOwner fk.conquerCastle(destiny, newOwner);
+				System.out.println(message_SoldierFail5+KNIGHT+fk.getSoldOwner(sold)+message_SoldierFail9+fk.getCastleName(destiny)+
+				message_SoldierFail10);
+			}
+			else if (fk.whobattle(first, second).equals(second) && !first.equals(second)) {
+				System.out.println(message_SoldierFail13+second+fk.getSoldOwner(destiny));
+			}
+			else {
+				System.out.println(KNIGHT);
+			}
+			
+		}
+		else {
+			fk.moving(sold, d);
 		}
 		
 	}
