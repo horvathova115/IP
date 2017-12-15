@@ -5,8 +5,6 @@ public class Castles {
 	private int treasure;
 	private boolean occupied;
 	private Position p;
-	
-	
 
 	public Castles(int x, int y, int treasure, String name, boolean occupied) {
 		this.name = name;
@@ -42,15 +40,12 @@ public class Castles {
 	}
 
 	public int getTreasure() {
-		// TODO Auto-generated method stub
-		return 0;
+		return treasure;
 	}
 
 	public void setOwner(Kingdom k) {
 		occupied=true;
 		owner=k;
-		// TODO Auto-generated method stub
-		
 	}
 	
 }
