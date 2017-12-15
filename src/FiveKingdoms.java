@@ -84,13 +84,14 @@ public class FiveKingdoms {
 	
 	// @pre: canCastleBuy(castle)
 	public void atributeSoldier(String type, String castle) {
-		for (int i = 0; i == numOfCastles; i++) {
+		for (int i = 0; i < counterArmies; i++) {
 			if (castles[i].getName().equals(castle)) {
 				castles[i].depositGold(getPrice(type));
 			}
 		}
-		armies[currentArmy].castle = castle;
-		armies[currentArmy].type = type;
+		armies[counterArmies].castle = castle;
+		armies[counterArmies].type = type;
+		counterArmies++;
 	}
 	
 	public int getPrice(String type) {
@@ -105,12 +106,26 @@ public class FiveKingdoms {
 		}
 	}
 	
-	/* method to check if the type of soldier in the pos x y
+	public String getSoldOwner(Position sold) {
+		String k = null;
+		for (int i = 0; i < counterArmies; i++) {
+			if (armies[i].getPos().equals(sold)) {
+				k = armies[i].owner;
+				return k;
+			}
+			else {
+				k = null;
+			}
+		}
+		return k;
+	}
+	
 	public String checkType(int x, int y) {
+		Position kpos = new Position(x,y);
 		String k = null;
 		for (int i = 0; !hasNextArmy(); i++) {
 			//the getX
-			if ((armies[i].getX() == x) && (armies[i].getY() == y)) {
+			if ((armies[i].getPos().equals(kpos))) {
 				k = armies[i].type;
 			}
 			else {
@@ -119,7 +134,6 @@ public class FiveKingdoms {
 		}
 		return k;
 	}
-	*/
 	
 	public int kingdomsnTreasure(String name) {
 		int k = 0;
@@ -180,20 +194,6 @@ public class FiveKingdoms {
 		return buys;
 	}
 
-	public boolean isCastleOccupied(String castle) {
-		boolean occupied = false;
-		for (int i = 0; i < counterCastles; i++) {
-			if (armies[i].getCastle().equals(castle)) {
-				occupied = true;
-				return occupied;
-			}
-			else {
-				occupied = false;
-			}
-		}
-		return occupied;
-	}
-
 	public void addCastle(Castles c) {
 		castles[counter]=c;
 		counterCastles++;
@@ -235,7 +235,8 @@ public class FiveKingdoms {
 	public void removeAllKingdoms() {
 		kingdoms = new Kingdom[numOfKingdoms];
 	}
-//pre condition , getNumberOfKingdoms>0;
+	
+	// @pre: getNumberOfKingdoms>0;
 	public boolean existKingdom(String kingdom) {
 		boolean exist=false;
 		for(int i=0;i<counterKingdoms;i++){
@@ -262,10 +263,6 @@ public class FiveKingdoms {
 		return counterKingdoms;
 	}
 
-	public Object checkType(int soldierx, int soldiery) {
-		return null;
-	}
-
 	public Castles getCastle(String castle) {
 		Castles c = null;
 		for(int i=0;i<counterCastles-1;i++){
@@ -275,9 +272,22 @@ public class FiveKingdoms {
 		}
 		return c;
 	}
+	
+	public String getCastleName(Position castlepos) {
+		String k = null;
+		for(int i=0;i<counterCastles-1;i++){
+			if(castles[i].getPos().equals(castlepos)){
+				k = castles[i].getName();
+				return k;
+			}
+			else {
+				k = null;
+			}
+		}
+		return k;
+	}
 
 	public String castlesOfKingdom(String teamPlaying) {
-		// TODO Auto-generated method stub
 		String res="";
 		Kingdom k = findKingdom(teamPlaying);
 		k.initializeIterator();
@@ -292,7 +302,6 @@ public class FiveKingdoms {
 	}
 
 	private Kingdom findKingdom(String teamPlaying) {
-		// TODO Auto-generated method stub
 		Kingdom k=null;
 		for(int i=0;i<counterKingdoms;i++){
 			if(kingdoms[i].getName().equals(teamPlaying)){
@@ -301,6 +310,117 @@ public class FiveKingdoms {
 		}
 		return k;
 	}
-
+	
+	public void moving(Position previous, String direction) {
+		Position newest = new Position(0,0);
+		newest.equals(previous);
+		if (direction.equals("norte")) {
+			newest.addX(1);
+		}
+		else if (direction.equals("sul")) {
+			newest.addX(-1);
+		}
+		else if (direction.equals("oeste")) {
+			newest.addY(-1);
+		}
+		else if (direction.equals("este")) {
+			newest.addY(1);
+		}
+		else {
+			newest.addX(0);
+			newest.addY(0);
+		}
+		for (int i = 0; i<counterArmies; i++) {
+			if (armies[i].getPos().equals(previous)) {
+				armies[i].changePos(newest);
+			}
+		}
+	}
+	
+	public void movingSoldier(Position previous, Position newest) {
+		for(int i = 0; i<counterArmies; i++) {
+			if(armies[i].getPos().equals(previous)) {
+				armies[i].changePos(newest);
+			}
+		}
+	}
+	
+	public void conquerCastle(Position castlepos, Kingdom newOwner) {
+		for(int i = 0; i<counterCastles; i++) {
+			if(castles[i].getPos().equals(castlepos)) {
+				castles[i].setOwner(newOwner);
+			}
+		}
+	}
+	
+	public boolean belongsToMap(Position test) {
+		if (test.getX() > map.getX() || test.getY() > map.getY() || test.getX() < 0 || test.getY() < 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	public String whobattle(String first, String second) {
+		if (first.equals(KNIGHT) && second.equals(KNIGHT)) {
+			return first;
+		}
+		else if (first.equals(KNIGHT) && second.equals(LANCER)) {
+			return second;
+		}
+		else if (first.equals(KNIGHT) && second.equals(SWORDSMAN)) {
+			return first;
+		}
+		else if (first.equals(LANCER) && second.equals(KNIGHT)) {
+			return first;
+		}
+		else if (first.equals(LANCER) && second.equals(LANCER)) {
+			return first;
+		}
+		else if (first.equals(LANCER) && second.equals(SWORDSMAN)) {
+			return second;
+		}
+		else if (first.equals(SWORDSMAN) && second.equals(KNIGHT)) {
+			return second;
+		}
+		else if (first.equals(SWORDSMAN) && second.equals(LANCER)) {
+			return first;
+		}
+		else if (first.equals(SWORDSMAN) && second.equals(SWORDSMAN)) {
+			return first;
+		}
+		return null;
+	}
+	
+	public int getSoldierIndex(Position soldpos) {
+		int j = 0;
+		for (int i = 0; i<counterArmies ; i++) {
+			if (armies[i].getPos().equals(soldpos)) {
+				j = i;
+			}
+			else {
+				j = 0;
+			}
+		}
+		return j;
+	}
+	
+	public void removeSoldier(int index) {
+		for(int i = index; i<counterArmies; i++) {
+			armies[i] = armies[i+1];
+		}
+		counterArmies--;
+	}
+	
+	public boolean existsSoldier(Position test) {
+		boolean exists = false;
+		for (int i = 0; i<counterArmies ; i++) {
+			if (armies[i].getPos().equals(test)) {
+				exists = true;
+			}
+		}
+		return exists;
+	}
 	
 }
