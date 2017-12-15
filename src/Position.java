@@ -22,4 +22,12 @@ public class Position {
 	public int getY() {
 		return y;
 	}
+	
+	public void addX(int much) {
+		x+=much;
+	}
+	
+	public void addY(int much) {
+		y+=much;
+	}
 }
